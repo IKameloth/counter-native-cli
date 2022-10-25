@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableNativeFeedback, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableNativeFeedback, TouchableOpacity, View, Platform } from 'react-native'
 
 interface FabProps {
   title: string
@@ -8,15 +8,33 @@ interface FabProps {
 }
 
 export const Fab = ({ title, onPress, position = 'br' }: FabProps) => {
-  return (
-    <View style={[styles.buttonLocation, position === 'br' ? styles.right : styles.left]}>
-      <TouchableNativeFeedback onPress={onPress} background={TouchableNativeFeedback.Ripple('#28425B', false, 30)}>
+  const ios = () => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={[styles.buttonLocation, position === 'br' ? styles.right : styles.left]}
+        onPress={onPress}
+      >
         <View style={styles.fab}>
           <Text style={styles.fabText}>{title}</Text>
         </View>
-      </TouchableNativeFeedback>
-    </View>
-  )
+      </TouchableOpacity>
+    )
+  }
+
+  const android = () => {
+    return (
+      <View style={[styles.buttonLocation, position === 'br' ? styles.right : styles.left]}>
+        <TouchableNativeFeedback onPress={onPress} background={TouchableNativeFeedback.Ripple('#28425B', false, 30)}>
+          <View style={styles.fab}>
+            <Text style={styles.fabText}>{title}</Text>
+          </View>
+        </TouchableNativeFeedback>
+      </View>
+    )
+  }
+
+  return Platform.OS === 'ios' ? ios() : android()
 }
 
 const styles = StyleSheet.create({
